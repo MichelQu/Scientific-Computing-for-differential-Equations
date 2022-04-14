@@ -1,0 +1,37 @@
+%%%% Stability plot
+
+% Specify x range and number of points
+ x0 = -3;
+ x1 = 3;
+ Nx = 301;
+ % Specify y range and number of points
+ y0 = -3;
+ y1 = 3;
+ Ny = 301;
+ % Construct mesh
+ xv = linspace(x0,x1,Nx);
+ yv = linspace(y0,y1,Ny);
+ [x,y] = meshgrid(xv,yv);
+ % Calculate z
+ z = x + i*y;
+ %RK4
+ g = 1 + z + 0.5*z.^2+ (1/6)*z.^3+ (1/24)*z.^4;
+ % Calculate magnitude of g
+ gmag = abs(g);
+  % Implicit Euler
+
+ 
+ 
+ % Plot contours of gmag
+ figure(3)
+ implot(xv, yv, gmag, ' |R(z)| (stability plot)');
+ axis([x0,x1,y0,y1]);
+ axis('square');
+ xlabel('Re(\lambda\Deltat)');
+ ylabel('Im(\lambda\Deltat)');
+ figure(4)
+ contour(x,y,gmag,[1 1],'b','LineWidth',1.5);
+ axis([x0,x1,y0,y1]);
+ axis('square');
+ xlabel('Re(\lambda\Deltat)');
+ ylabel('Im(\lambda\Deltat)');

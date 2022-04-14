@@ -1,0 +1,49 @@
+a = 1;
+b = 1;
+x0 = [1; 1];
+
+mu=[1.5;15];
+t0=0;
+tN=7.5;
+N=10000;
+h = (tN-t0)/N;
+nx = size(x0,1);
+X = zeros(nx, N+1);
+T = zeros(1,N+1);
+T(:,1) = t0;
+X(:,1) = x0;
+for i=1:N
+    f= feval(@VanDerPol,T(:,i),X(:,i),mu(1)); %func2
+    [T(:,i+1),X(:,i+1)] = ClassicalRungeKuttaStep(@VanDerPol,T(:,i),X(:,i),f,h,mu(1)); %lam
+end
+    
+options = odeset('RelTol',1.0e-6,'AbsTol',1.0e-6);
+[TT,XX]=ode45(@VanderPolfunjac,[0 tN],x0,options,mu(1));
+
+options = odeset('Jacobian', @VanderPolfunjac,'RelTol',1.0e-6,'AbsTol',1.0e-6);
+%[Y,Z]=ode15s(@VanDerPol,[0 tN],x0,options,mu(1));
+
+figure(1);
+tiledlayout(2,1);
+nexttile;
+hold on
+plot(T,X(1,:),'LineWidth', 2)
+plot(TT,XX(:,1),'--','LineWidth', 2);
+legend('RK4','ode45')
+xlim([t0 tN])
+hold off
+nexttile;
+hold on
+plot(T,X(2,:),'-','LineWidth', 2)
+plot(TT,XX(:,2),'--','LineWidth', 2);
+legend('RK4','ode45')
+xlim([t0 tN])
+
+hold off
+figure(2);
+hold on
+plot(X(1,:),X(2,:),'LineWidth', 2)
+plot(XX(:,1),XX(:,2),'--','LineWidth', 2);
+legend('RK4','ode45')
+xlim([-2.5 2.5])
+hold off

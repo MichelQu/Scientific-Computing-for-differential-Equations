@@ -1,0 +1,33 @@
+a = 1;
+b = 1;
+x0 = [2; 2];
+options = odeset('RelTol',1.0e-6,'AbsTol',1.0e-6);
+[T,X]=ode45(@PreyPredator,[0 50],x0,options,a,b);
+
+figure(1);
+tiledlayout(2,1);
+nexttile;
+plot(T,X(:,1));
+nexttile;
+plot(T,X(:,2));
+figure(2);
+plot(X(:,1),X(:,2));
+
+t0 = 0;
+tN = 50;
+h0 = 0.0001;
+abstol = 1e-6%[1e-12,1e-9, 1e-6, 1e-3]; 
+reltol = 1e-6%[1e-12,1e-9, 1e-6, 1e-3]; 
+
+%options = odeset('Jacobian', @JacPreyPredator,'RelTol',1.0e-6,'AbsTol',1.0e-6);
+%[T,X]=ode15s(@PreyPredator,[0 50],x0,options,a,b);
+[T,X,info2] = ImplicitEulerAdaptiveStep(@PreyPredatorfunjac,[t0 tN],x0,h0,abstol,reltol,a,b);
+
+figure(3);
+tiledlayout(2,1);
+nexttile;
+plot(T,X(:,1));
+nexttile;
+plot(T,X(:,2));
+figure(4);
+plot(X(:,1),X(:,2));

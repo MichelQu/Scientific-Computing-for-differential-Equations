@@ -1,0 +1,29 @@
+function [Tx,G,I,X]=HovorkaModelSimulation(T,x0,U,D,par)
+% HOVORKAMODELSIMULATION   Simulation using the Hovorka model
+% Syntax: [Tx,G,I,X]=HovorkaModelSimulation(T,x0,U,D,par)
+options = odeset('RelTol',1e-6,'AbsTol',1e-6);
+x0 = [1 1]
+nx = length(x0);
+N = length(T);
+Tx(1) = T(1);
+X = x0';
+for k=1:N-1
+    x = X(end,:)';
+    [Tk,Xk]=ode45(@HovorkaModel,[T(k) T(k+1)],x,options,U(:,k),D(:,k),par);
+    X  = [X; Xk];
+    Tx = [Tx; Tk];
+end
+G = X(:,5)/par.VG;
+I = X(:,7);
+k12 = 0.066;
+ka1 = 0.006;
+ka2 = 0.06;
+ka3 = 0.03;
+ke = 0.138;
+tauD = 40;
+tauS = 55;
+AG = 0.8;
+SI1 = 51.2*1e-4;
+SI2 = 8.2*1e-4;
+SI3 = 520*1e-4;
+par = 

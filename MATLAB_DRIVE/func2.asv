@@ -1,0 +1,3 @@
+function xdot = func2(t,x, lamb)
+xdot = lamb*x;
+end
